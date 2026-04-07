@@ -24,7 +24,7 @@ export function Legal() {
             <tr><th style={s.th}>メールアドレス</th><td style={s.td}>formaruhaut.1@gmail.com</td></tr>
             <tr><th style={s.th}>販売URL</th><td style={s.td}>https://chintai-support.vercel.app</td></tr>
             <tr><th style={s.th}>販売サービス・価格</th><td style={s.td}>
-              チンサポAI — AIによる賃貸トラブル分析サービス（情報提供サービス）<br />
+              RentIQ — AIによる賃貸トラブル分析サービス（情報提供サービス）<br />
               ・家賃交渉サポート：¥480（税込・1回）<br />
               ・退去費用チェック：¥1,480（税込・1回）<br />
               ・見積書AIチェック：¥1,980（税込・1回）
@@ -46,7 +46,7 @@ export function Legal() {
         </table>
         <div style={{ ...s.footer }}>
           <a href="/" style={{ color: '#6B7280', textDecoration: 'none' }}>トップに戻る</a>
-          <p style={{ marginTop: 12 }}>© 2026 チンサポAI</p>
+          <p style={{ marginTop: 12 }}>© 2026 RentIQ</p>
         </div>
       </div>
     </div>

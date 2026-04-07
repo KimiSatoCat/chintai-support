@@ -152,7 +152,7 @@ function Landing({ onSelect }) {
     <div style={{ minHeight: '100vh', background: C.bg }}>
       <header style={{ background: C.card, borderBottom: `1px solid ${C.border}`, padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <span style={{ fontWeight: 700, fontSize: '1.1rem', color: C.accent }}>チンサポAI</span>
+          <span style={{ fontWeight: 700, fontSize: '1.1rem', color: C.accent }}>RentIQ</span>
           <span style={{ fontSize: '0.75rem', color: C.muted, marginLeft: 8 }}>賃貸トラブル AI分析サービス</span>
         </div>
         <a href="#/legal" style={{ fontSize: '0.75rem', color: C.muted, textDecoration: 'none' }}>特定商取引法</a>
@@ -203,7 +203,7 @@ function Landing({ onSelect }) {
 
         <footer style={{ textAlign: 'center', marginTop: 48, paddingTop: 24, borderTop: `1px solid ${C.border}` }}>
           <a href="#/legal" style={{ fontSize: '0.78rem', color: C.muted, textDecoration: 'none', margin: '0 12px' }}>特定商取引法に基づく表記</a>
-          <p style={{ fontSize: '0.72rem', color: '#9CA3AF', marginTop: 12 }}>© 2026 チンサポAI — 佐藤 公宜</p>
+          <p style={{ fontSize: '0.72rem', color: '#9CA3AF', marginTop: 12 }}>© 2026 RentIQ — 佐藤 公宜</p>
         </footer>
       </div>
     </div>
