@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 const SERVICES = [
   {
     id: 'yachin',
-    priceId: 'price_1TIQTmDedaFhOLE3agiOgUwD',
+    priceId: null,
+    free: true,
     name: '家賃交渉サポート',
-    price: 480,
+    price: 0,
     icon: '🏠',
     tagline: '借地借家法に基づく交渉メール文面を即日提供',
     desc: '周辺相場との比較・交渉可能性の分析・法的根拠つきの交渉メール文面・長期節約試算をレポートでお届けします。',
@@ -118,6 +119,10 @@ export default function App() {
   async function handleSubmit(svc, data) {
     setSelected(svc);
     setPage('processing');
+    if (svc.free) {
+      fetchResult(null, svc, data);
+      return;
+    }
     try {
       sessionStorage.setItem('chintai_form', JSON.stringify({ serviceId: svc.id, data }));
       const res = await fetch('/api/create-checkout', {
@@ -185,10 +190,16 @@ function Landing({ onSelect }) {
                   <p style={{ fontSize: '0.82rem', color: C.muted, lineHeight: 1.7 }}>{svc.desc}</p>
                 </div>
                 <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <div style={{ fontSize: '1.3rem', fontWeight: 700, color: C.accent }}>¥{svc.price.toLocaleString()}</div>
-                  <div style={{ fontSize: '0.72rem', color: C.muted }}>（税込・1回）</div>
-                  <div style={{ marginTop: 12, padding: '8px 18px', background: C.accent, color: '#fff', borderRadius: 8, fontSize: '0.82rem', fontWeight: 500 }}>
-                    利用する →
+                  {svc.free ? (
+                    <div style={{ fontSize: '1.3rem', fontWeight: 700, color: C.success }}>無料</div>
+                  ) : (
+                    <>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 700, color: C.accent }}>¥{svc.price.toLocaleString()}</div>
+                      <div style={{ fontSize: '0.72rem', color: C.muted }}>（税込・1回）</div>
+                    </>
+                  )}
+                  <div style={{ marginTop: 12, padding: '8px 18px', background: svc.free ? C.success : C.accent, color: '#fff', borderRadius: 8, fontSize: '0.82rem', fontWeight: 500 }}>
+                    {svc.free ? '無料で試す →' : '利用する →'}
                   </div>
                 </div>
               </div>
@@ -276,15 +287,22 @@ function Form({ svc, onBack, onSubmit }) {
               {errors.agreed && <p style={{ fontSize: '0.75rem', color: '#EF4444', marginTop: 4 }}>{errors.agreed}</p>}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: '#F9FAFB', borderRadius: 8, marginBottom: 20 }}>
-              <span style={{ fontSize: '0.85rem', color: C.muted }}>お支払い金額</span>
-              <span style={{ fontSize: '1.2rem', fontWeight: 700, color: C.accent }}>¥{svc.price.toLocaleString()} <span style={{ fontSize: '0.75rem', fontWeight: 400, color: C.muted }}>（税込・1回）</span></span>
-            </div>
+            {svc.free ? (
+              <div style={{ padding: '16px 20px', background: '#ECFDF5', borderRadius: 8, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: '1.1rem' }}>✓</span>
+                <span style={{ fontSize: '0.85rem', color: C.success, fontWeight: 500 }}>このサービスは無料でご利用いただけます</span>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: '#F9FAFB', borderRadius: 8, marginBottom: 20 }}>
+                <span style={{ fontSize: '0.85rem', color: C.muted }}>お支払い金額</span>
+                <span style={{ fontSize: '1.2rem', fontWeight: 700, color: C.accent }}>¥{svc.price.toLocaleString()} <span style={{ fontSize: '0.75rem', fontWeight: 400, color: C.muted }}>（税込・1回）</span></span>
+              </div>
+            )}
 
-            <button type="submit" style={{ width: '100%', padding: '14px', background: C.accent, color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer' }}>
-              カード決済へ進む →
+            <button type="submit" style={{ width: '100%', padding: '14px', background: svc.free ? C.success : C.accent, color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer' }}>
+              {svc.free ? 'AI分析を開始する →' : 'カード決済へ進む →'}
             </button>
-            <p style={{ textAlign: 'center', fontSize: '0.72rem', color: C.muted, marginTop: 10 }}>Stripe の安全な決済ページに移動します。カード情報は当サービスには送信されません。</p>
+            {!svc.free && <p style={{ textAlign: 'center', fontSize: '0.72rem', color: C.muted, marginTop: 10 }}>Stripe の安全な決済ページに移動します。カード情報は当サービスには送信されません。</p>}
           </form>
         </div>
       </div>

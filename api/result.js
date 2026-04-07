@@ -93,21 +93,26 @@ ${d.items}
 （合意できない場合の対応策）`,
 };
 
+const FREE_SERVICES = ['yachin'];
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { sessionId, serviceId, formData } = req.body;
-  if (!sessionId || !serviceId || !formData) return res.status(400).json({ error: 'Missing parameters' });
+  if (!serviceId || !formData) return res.status(400).json({ error: 'Missing parameters' });
 
-  // Stripeで決済確認
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (session.payment_status !== 'paid') {
-      return res.status(402).json({ error: '決済が確認できませんでした' });
+  // 無料サービス以外はStripeで決済確認
+  if (!FREE_SERVICES.includes(serviceId)) {
+    if (!sessionId) return res.status(400).json({ error: 'Missing sessionId' });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    try {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      if (session.payment_status !== 'paid') {
+        return res.status(402).json({ error: '決済が確認できませんでした' });
+      }
+    } catch (e) {
+      return res.status(400).json({ error: 'セッションの確認に失敗しました: ' + e.message });
     }
-  } catch (e) {
-    return res.status(400).json({ error: 'セッションの確認に失敗しました: ' + e.message });
   }
 
   // Claude で分析
